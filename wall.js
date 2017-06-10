@@ -6,6 +6,7 @@ var axios = require("axios");
 var key_words = process.argv[2] ? process.argv[2] : null,
     directory = process.argv[3] ? process.argv[3] : key_words,
     startPage = 1,
+    totalPagesNumber = 0,
     totalImagesNumber = 0,
     imagesInformations = [],
     countloaded = 0,
@@ -15,14 +16,25 @@ var key_words = process.argv[2] ? process.argv[2] : null,
 if (!!!key_words) {
     console.log("please try \"$npm start {{key_words}} {{directory}}\" again!");
 } else {
-    insertResult("key words: " + key_words);
-    insertResult("directory: " + directory);
+    insertLog("key words: " + key_words);
+    insertLog("directory: " + directory);
     if (!fs.existsSync(directory)) {
         fs.mkdirSync(key_words);
     }
 
     /* start */
-    getPageNumber(startPage);
+
+    /* get total page number */
+    var r = request.get(
+        "https://wall.alphacoders.com/search.php?search=" + encodeURI(key_words) + "&page=" + 9999999999,
+        function(err, res, body) {
+            totalPagesNumber = res.request.uri.href;
+            totalPagesNumber = totalPagesNumber.split("&page=")[1];
+            totalPagesNumber = parseInt(totalPagesNumber);
+            insertLog("total page number: " + totalPagesNumber);
+
+            getPageNumber(startPage);
+        });
 }
 
 
@@ -32,44 +44,34 @@ function getPageNumber(nowPage) {
             url: "https://wall.alphacoders.com/search.php?search=" + encodeURI(key_words) + "&page=" + nowPage,
         })
         .then(function(res) {
-            var $ = cheerio.load(res.data);
-            list = $(".thumb-container-big .boxgrid a img"),
-                src = null,
-                checker = [],
-                lastNode = null;
+            var $ = cheerio.load(res.data),
+                list = $(".thumb-container-big .boxgrid a img"),
+                src = null;
 
-
-            checker = getImageInfo(nowPage, list, $, checker, true);
-            checker = checker[checker.length - 1];
-            lastNode = imagesInformations[imagesInformations.length - 1];
-
-            if (lastNode) {
-                if (lastNode.id === checker.id && lastNode.route === checker.route) {
-                    imagesInformations = combineRouteAndID(imagesInformations);
-
-                    console.log("\ndownload started!\n");
-                    totalImagesNumber = imagesInformations.length;
-                    for (var i = 0; i < imagesInformations.length; i++) {
-                        obj = imagesInformations[i];
-                        download(obj.src, directory, obj.name, totalImagesNumber);
-                        obj = null;
-                    }
-
-                    return;
-                }
-            }
             imagesInformations = getImageInfo(nowPage, list, $, imagesInformations);
 
-            list = null;
-            nowPage++;
-            getPageNumber(nowPage);
+            if (nowPage === totalPagesNumber) {
+                imagesInformations = combineRouteAndID(imagesInformations);
+
+                console.log("\ndownload started!\n");
+                totalImagesNumber = imagesInformations.length;
+                for (var i = 0; i < imagesInformations.length; i++) {
+                    obj = imagesInformations[i];
+                    download(obj.src, directory, obj.name, totalImagesNumber);
+                    obj = null;
+                }
+            } else {
+                list = null;
+                nowPage++;
+                getPageNumber(nowPage);
+            }
         })
         .catch(function(error) {
-            insertResult(error);
+            insertLog(error);
         });
 }
 
-function insertResult(input, hide) {
+function insertLog(input, hide) {
     if (!hide) {
         console.log(input);
     }
@@ -83,7 +85,7 @@ function insertResult(input, hide) {
 function endingPoint() {
     var log_name = key_words + " " + (new Date()).toString().replace(/\./g, "-").replace(/\:/g, "-") + ".txt";
 
-    insertResult("Downloaded finished", true);
+    insertLog("Downloaded finished", true);
     console.log("\n=========================================");
     console.log("all iamges are downloaded!");
     console.log("check out \"" + log_name + "\" for more information.");
@@ -92,10 +94,10 @@ function endingPoint() {
 }
 
 function download(url, dir, filename, total) {
-    insertResult("start download " + filename, true);
+    insertLog("start download " + filename, true);
     request(url, function(er, res, body) {
         if (er) {
-            insertResult("retry: " + filename);
+            insertLog("retry: " + filename);
             download(url, dir, filename, total);
             return;
         }
@@ -140,7 +142,7 @@ function getImageInfo(nowPage, list, $, inputArray, checker) {
         src = null;
     }
     if (!checker) {
-        insertResult("get page " + nowPage + " data success");
+        insertLog("get page " + nowPage + " data success");
     }
     return imagesInformations;
 }
