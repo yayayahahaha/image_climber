@@ -1,0 +1,5 @@
+**/*.jpg
+**/*.png
+node_modules/**
+package-lock.json
+result.json
