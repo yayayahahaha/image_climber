@@ -31,6 +31,11 @@ if (!!!key_words) {
             totalPagesNumber = res.request.uri.href;
             totalPagesNumber = totalPagesNumber.split("&page=")[1];
             totalPagesNumber = parseInt(totalPagesNumber);
+            if (totalPagesNumber === 9999999999) {
+                console.log("Sorry, we have no results for your search! please try another key_words");
+                return;
+            }
+
             insertLog("total page number: " + totalPagesNumber);
 
             getPageNumber(startPage);
