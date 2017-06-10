@@ -8,14 +8,15 @@ var key_words = process.argv[2] ? process.argv[2] : null,
     startPage = 1,
     totalImagesNumber = 0,
     imagesInformations = [],
-    countloaded = 0;
+    countloaded = 0,
+    log = "";
 
 /* create directory */
 if (!!!key_words) {
     console.log("please try \"$npm start {{key_words}} {{directory}}\" again!");
 } else {
-    console.log("key words: " + key_words);
-    console.log("directory: " + directory);
+    insertResult("key words: " + key_words);
+    insertResult("directory: " + directory);
     if (!fs.existsSync(directory)) {
         fs.mkdirSync(key_words);
     }
@@ -45,7 +46,6 @@ function getPageNumber(nowPage) {
             if (lastNode) {
                 if (lastNode.id === checker.id && lastNode.route === checker.route) {
                     imagesInformations = combineRouteAndID(imagesInformations);
-                    fs.writeFileSync("result.json", JSON.stringify(imagesInformations));
 
                     console.log("\ndownload started!\n");
                     totalImagesNumber = imagesInformations.length;
@@ -65,19 +65,48 @@ function getPageNumber(nowPage) {
             getPageNumber(nowPage);
         })
         .catch(function(error) {
-            console.log(error);
+            insertResult(error);
         });
 }
 
+function insertResult(input, hide) {
+    if (!hide) {
+        console.log(input);
+    }
+    log += new Date();
+    log += "\n";
+    log += input;
+    log += "\n";
+    log += "\n";
+}
+
+function endingPoint() {
+    var log_name = key_words + " " + (new Date()).toString().replace(/\./g, "-").replace(/\:/g, "-") + ".txt";
+
+    insertResult("Downloaded finished", true);
+    console.log("\n=========================================");
+    console.log("all iamges are downloaded!");
+    console.log("check out \"" + log_name + "\" for more information.");
+    console.log("=========================================");
+    fs.writeFileSync(log_name, log);
+}
+
 function download(url, dir, filename, total) {
+    insertResult("start download " + filename, true);
     request(url, function(er, res, body) {
         if (er) {
-            console.log("retry: " + filename);
+            insertResult("retry: " + filename);
             download(url, dir, filename, total);
             return;
         }
         countloaded++;
         console.log(countloaded + " / " + total + " || " + Math.round(countloaded * 1000 / total) / 10 + "%");
+
+        /* check all files downloaded or not */
+        if (countloaded === total) {
+            endingPoint();
+        }
+
     }).pipe(fs.createWriteStream(dir + "/" + filename));
 }
 
@@ -111,7 +140,7 @@ function getImageInfo(nowPage, list, $, inputArray, checker) {
         src = null;
     }
     if (!checker) {
-        console.log("get page " + nowPage + " data success");
+        insertResult("get page " + nowPage + " data success");
     }
     return imagesInformations;
 }
