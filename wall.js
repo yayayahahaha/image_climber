@@ -3,25 +3,27 @@ var fs = require("fs");
 var cheerio = require("cheerio");
 var axios = require("axios");
 
-var url = "https://exhentai.org/g/998656/a6fdd9783f/";
-
-var key_words = process.argv[2] ? process.argv[2] : "kill la kill",
-    directory = process.argv[3] ? process.argv[3] : "./" + new Date().toString().replace(/T/, ' ').replace(/\..+/, '').replace(/:/g, "-"),
+var key_words = process.argv[2] ? process.argv[2] : null,
+    directory = process.argv[3] ? process.argv[3] : key_words,
     startPage = 1,
     totalImagesNumber = 0,
     imagesInformations = [],
     countloaded = 0;
 
-console.log("key words: " + key_words);
-console.log("directory: " + directory);
-
 /* create directory */
-if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
+if (!!!key_words) {
+    console.log("please try \"$npm start {{key_words}} {{directory}}\" again!");
+} else {
+    console.log("key words: " + key_words);
+    console.log("directory: " + directory);
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(key_words);
+    }
+
+    /* start */
+    getPageNumber(startPage);
 }
 
-
-getPageNumber(startPage);
 
 function getPageNumber(nowPage) {
     axios({
@@ -75,7 +77,7 @@ function download(url, dir, filename, total) {
             return;
         }
         countloaded++;
-        console.log(countloaded + " / " + total + " ," + Math.round(countloaded * 1000 / total) / 10 + "%");
+        console.log(countloaded + " / " + total + " || " + Math.round(countloaded * 1000 / total) / 10 + "%");
     }).pipe(fs.createWriteStream(dir + "/" + filename));
 }
 
