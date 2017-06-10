@@ -16,12 +16,6 @@ var key_words = process.argv[2] ? process.argv[2] : null,
 if (!!!key_words) {
     console.log("please try \"$npm start {{key_words}} {{directory}}\" again!");
 } else {
-    insertLog("key words: " + key_words);
-    insertLog("directory: " + directory);
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(key_words);
-    }
-
     /* start */
 
     /* get total page number */
@@ -34,6 +28,11 @@ if (!!!key_words) {
             if (totalPagesNumber === 9999999999) {
                 console.log("Sorry, we have no results for your search! please try another key_words");
                 return;
+            }
+            insertLog("key words: " + key_words);
+            insertLog("directory: " + directory);
+            if (!fs.existsSync(directory)) {
+                fs.mkdirSync(key_words);
             }
 
             insertLog("total page number: " + totalPagesNumber);
