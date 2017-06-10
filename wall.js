@@ -31,9 +31,6 @@ if (!!!key_words) {
             }
             insertLog("key words: " + key_words);
             insertLog("directory: " + directory);
-            if (!fs.existsSync(directory)) {
-                fs.mkdirSync(key_words);
-            }
 
             insertLog("total page number: " + totalPagesNumber);
 
@@ -56,6 +53,11 @@ function getPageNumber(nowPage) {
 
             if (nowPage === totalPagesNumber) {
                 imagesInformations = combineRouteAndID(imagesInformations);
+
+                /*  check if directory alreayd exist or not*/
+                if (!fs.existsSync(directory)) {
+                    fs.mkdirSync(key_words);
+                }
 
                 console.log("\ndownload started!\n");
                 totalImagesNumber = imagesInformations.length;
