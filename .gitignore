@@ -1,5 +1,6 @@
 **/*.jpg
 **/*.png
+**/*/gif
 node_modules/**
 package-lock.json
 *.txt
