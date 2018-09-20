@@ -12,13 +12,13 @@ var key_words = process.argv[2] ? process.argv[2] : null,
     countloaded = 0,
     log = '';
 
-/* create directory */
+ // create directory
 if (!!!key_words) {
     console.log('please try \'$npm start {{key_words}} {{directory}}\' again!');
 } else {
-    /* start */
+     // start
 
-    /* get total page number */
+     // get total page number
     var r = request.get(
         'https://wall.alphacoders.com/search.php?search=' + encodeURI(key_words) + '&page=' + 9999999999,
         function(err, res, body) {
@@ -54,7 +54,7 @@ function getPageNumber(nowPage) {
             if (nowPage === totalPagesNumber) {
                 imagesInformations = combineRouteAndID(imagesInformations);
 
-                /*  check if directory alreayd exist or not*/
+                  // check if directory alreayd exist or not
                 if (!fs.existsSync(directory)) {
                     fs.mkdirSync(key_words);
                 }
@@ -110,7 +110,7 @@ function download(url, dir, filename, total) {
         countloaded++;
         console.log(countloaded + ' / ' + total + ' || ' + Math.round(countloaded * 1000 / total) / 10 + '%');
 
-        /* check all files downloaded or not */
+         // check all files downloaded or not
         if (countloaded === total) {
             endingPoint();
         }
