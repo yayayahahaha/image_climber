@@ -19,9 +19,9 @@ keyword = 'bakemonogatari'; // testing data
 // init();
 
 // testing init
-var contents = fs.readFileSync('./result.json'),
+var contents = fs.readFileSync('./image_src.json'),
     json = JSON.parse(contents);
-getAllImageUrl(json);
+startDownLoad(json);
 
 async function getTotalImageNumber() {
     var totalImagesNumber = await axios({
@@ -73,8 +73,6 @@ async function getAllImagesId(page_number) {
         .flattenDepth(1)
         .value();
 
-    fs.writeFileSync('result.json', JSON.stringify(allImagesId, null, 2));
-
     getAllImageUrl(allImagesId);
 
     function _createReturnFunction(page) {
@@ -117,7 +115,7 @@ async function getAllImageUrl(allImagesId) {
         .flattenDepth(1)
         .value();
 
-    fs.writeFileSync('image_src.json', JSON.stringify(allImagesSrc, null, 2));
+    startDownLoad(allImagesSrc);
 
     function _createReturnFunction(image_id) {
         var url = baseUrl + '/big.php?i=' + image_id;
@@ -135,4 +133,8 @@ async function getAllImageUrl(allImagesId) {
             });
         };
     }
+}
+
+async function startDownLoad(allImagesSrc) {
+    console.log(allImagesSrc.length);
 }
