@@ -16,7 +16,12 @@ var keyword = process.argv[2] ? process.argv[2] : false,
 
 keyword = 'bakemonogatari'; // testing data
 // start
-init();
+// init();
+
+// testing init
+var contents = fs.readFileSync('./result.json'),
+    json = JSON.parse(contents);
+getAllImageUrl(json);
 
 async function getTotalImageNumber() {
     var totalImagesNumber = await axios({
@@ -55,8 +60,7 @@ async function getAllImagesId(page_number) {
     var taskArray = [],
         task_search = null;
 
-    // for (var i = 1; i <= page_number; i++) {
-    for (var i = 1; i <= 2; i++) {
+    for (var i = 1; i <= page_number; i++) {
         taskArray.push(_createReturnFunction(i));
     }
     task_search = new TaskSystem(taskArray, 32);
@@ -69,8 +73,9 @@ async function getAllImagesId(page_number) {
         .flattenDepth(1)
         .value();
 
-    console.log(allImagesId);
     fs.writeFileSync('result.json', JSON.stringify(allImagesId, null, 2));
+
+    getAllImageUrl(allImagesId);
 
     function _createReturnFunction(page) {
         var url = baseUrl + '/search.php?search=' + keyword + '&page=' + page
@@ -92,4 +97,11 @@ async function getAllImagesId(page_number) {
             });
         }
     }
+}
+
+async function getAllImageUrl(allImagesId) {
+    allImagesId = allImagesId.map(function(image_id) {
+        return baseUrl + '/big.php?i=' + image_id;
+    });
+    console.log(allImagesId[0]);
 }
