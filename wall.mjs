@@ -1,7 +1,14 @@
-var request = require('request');
-var fs = require('fs');
-var cheerio = require('cheerio');
-var axios = require('axios');
+import {
+    TaskSystem
+} from './flyc-lib/utils/TaskSystem';
+
+import axios from 'axios';
+import fs from 'fs'
+import cheerio from 'cheerio'; //var $ = cheerio.load(res.data);
+import _ from 'lodash';
+import {
+    TaskSystem
+} from './flyc-lib/utils/TaskSystem';
 
 var key_words = process.argv[2] ? process.argv[2] : null,
     directory = process.argv[3] ? process.argv[3] : key_words,
@@ -12,9 +19,13 @@ var key_words = process.argv[2] ? process.argv[2] : null,
     countloaded = 0,
     log = '';
 
+console.log(JSON.stringify(process.argv));
+
  // create directory
 if (!!!key_words) {
     console.log('please try \'$npm start {{key_words}} {{directory}}\' again!');
+} else if (true) {
+    console.log('here');
 } else {
      // start
 
