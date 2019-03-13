@@ -107,10 +107,17 @@ async function getAllImageUrl(allImagesId) {
     allImagesId.forEach(function(image_id) {
         taskArray.push(_createReturnFunction(image_id));
     });
-    task_search = new TaskSystem(taskArray, 5);
-    var response = await task_search.doPromise();
-    console.log(response);
-    fs.writeFileSync('image_src.json', JSON.stringify(response, null, 2));
+    task_search = new TaskSystem(taskArray.splice(0, 10), 5);
+
+    var response = await task_search.doPromise(),
+        allImagesSrc = _.chain(response)
+        .map(function(item) {
+            return item.data;
+        })
+        .flattenDepth(1)
+        .value();
+
+    fs.writeFileSync('image_src.json', JSON.stringify(allImagesSrc, null, 2));
 
     function _createReturnFunction(image_id) {
         var url = baseUrl + '/big.php?i=' + image_id;
