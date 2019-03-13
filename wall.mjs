@@ -8,6 +8,7 @@ import {
 
 var keyword = process.argv[2] ? process.argv[2] : false,
     directory = process.argv[3] ? process.argv[3] : String(keyword),
+    baseUrl = 'https://wall.alphacoders.com/search.php',
     startPage = 1,
     imagesInformations = [],
     countloaded = 0,
@@ -20,7 +21,7 @@ init();
 async function getTotalImageNumber() {
     var totalImagesNumber = await axios({
         method: 'get',
-        url: 'https://wall.alphacoders.com/search.php',
+        url: baseUrl,
         data: {
             search: keyword,
             page: 1
@@ -53,7 +54,7 @@ async function init() {
 async function getAllImagesId(page_number) {
     var taskArray = [],
         task_search = null;
-        // task_search = new TaskSystem(taskArray, 32);
+    // task_search = new TaskSystem(taskArray, 32);
 
     // for (var i = 1; i <= page_number; i++) {
     for (var i = 1; i <= 1; i++) {
@@ -61,11 +62,10 @@ async function getAllImagesId(page_number) {
     }
     task_search = new TaskSystem(taskArray, 32);
     var response = await task_search.doPromise();
-    console.log(response);
     fs.writeFileSync('result.json', JSON.stringify(response));
 
     function _createReturnFunction(page) {
-        var url = 'https://wall.alphacoders.com/search.php?search=' + keyword + '&page=' + page
+        var url = baseUrl + '?search=' + keyword + '&page=' + page
         return function() {
             return axios({
                 method: 'get',
@@ -90,7 +90,7 @@ async function getAllImagesId(page_number) {
 function getPageNumber(nowPage) {
     axios({
             method: 'get',
-            url: 'https://wall.alphacoders.com/search.php?search=' + encodeURI(keyword) + '&page=' + nowPage,
+            url: baseUrl + '?search=' + encodeURI(keyword) + '&page=' + nowPage,
         })
         .then(function(res) {
             var $ = cheerio.load(res.data),
