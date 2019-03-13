@@ -6,3 +6,4 @@ package-lock.json
 *.txt
 .DS_Store
 result.json
+image_src.json
