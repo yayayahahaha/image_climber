@@ -45,7 +45,30 @@ async function init() {
 
     var totalImageNumber = await getTotalImageNumber(),
         totalPagesNumber = Math.ceil(totalImageNumber / 30);
-    console.log('end');
+}
+
+function getAllImagesId(page_number) {
+    var taskArray = [],
+        task_search = null;
+        // task_search = new TaskSystem(taskArray, 32);
+    for (var i = 1; i <= page_number; i++) {
+        taskArray.push(_createReturnFunction(i));
+    }
+
+    function _createReturnFunction(page) {
+        var url = 'https://wall.alphacoders.com/search.php?search=' + keyword + '&page=' + page
+        return function() {
+            return axios({
+                method: 'get',
+                url: url,
+            }).then(function(res) {
+                var $ = cheerio.load(data.data);
+                return ;
+            }).catch(function(error) {
+                console.error(error);
+            });
+        }
+    }
 }
 
 
