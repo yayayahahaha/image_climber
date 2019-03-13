@@ -6,8 +6,8 @@ import {
     TaskSystem
 } from './flyc-lib/utils/TaskSystem';
 
-var key_words = process.argv[2] ? process.argv[2] : false,
-    directory = process.argv[3] ? process.argv[3] : String(key_words),
+var keyword = process.argv[2] ? process.argv[2] : false,
+    directory = process.argv[3] ? process.argv[3] : String(keyword),
     startPage = 1,
     totalPagesNumber = 0,
     totalImagesNumber = 0,
@@ -15,12 +15,10 @@ var key_words = process.argv[2] ? process.argv[2] : false,
     countloaded = 0,
     log = '';
 
-console.log(key_words);
-console.log(directory);
-
  // create directory
-if (!!!key_words) {
-    console.log('please try \'$npm start {{key_words}} {{directory}}\' again!');
+if (!!!keyword) {
+    console.log('the keyword');
+    console.log('please try \'$npm start {{keyword}} {{directory}}\' again!');
 } else if (true) {
     console.log('here');
 } else {
@@ -28,16 +26,16 @@ if (!!!key_words) {
 
      // get total page number
     var r = request.get(
-        'https://wall.alphacoders.com/search.php?search=' + encodeURI(key_words) + '&page=' + 9999999999,
+        'https://wall.alphacoders.com/search.php?search=' + encodeURI(keyword) + '&page=' + 9999999999,
         function(err, res, body) {
             totalPagesNumber = res.request.uri.href;
             totalPagesNumber = totalPagesNumber.split('&page=')[1];
             totalPagesNumber = parseInt(totalPagesNumber);
             if (totalPagesNumber === 9999999999) {
-                console.log('Sorry, we have no results for your search! please try another key_words');
+                console.log('Sorry, we have no results for your search! please try another keyword');
                 return;
             }
-            insertLog('key words: ' + key_words);
+            insertLog('key words: ' + keyword);
             insertLog('directory: ' + directory);
 
             insertLog('total page number: ' + totalPagesNumber);
@@ -50,7 +48,7 @@ if (!!!key_words) {
 function getPageNumber(nowPage) {
     axios({
             method: 'get',
-            url: 'https://wall.alphacoders.com/search.php?search=' + encodeURI(key_words) + '&page=' + nowPage,
+            url: 'https://wall.alphacoders.com/search.php?search=' + encodeURI(keyword) + '&page=' + nowPage,
         })
         .then(function(res) {
             var $ = cheerio.load(res.data),
@@ -64,7 +62,7 @@ function getPageNumber(nowPage) {
 
                   // check if directory alreayd exist or not
                 if (!fs.existsSync(directory)) {
-                    fs.mkdirSync(key_words);
+                    fs.mkdirSync(keyword);
                 }
 
                 console.log('\ndownload started!\n');
@@ -97,7 +95,7 @@ function insertLog(input, hide) {
 }
 
 function endingPoint() {
-    var log_name = key_words + ' ' + (new Date()).toString().replace(/\./g, '-').replace(/\:/g, '-') + '.txt';
+    var log_name = keyword + ' ' + (new Date()).toString().replace(/\./g, '-').replace(/\:/g, '-') + '.txt';
 
     insertLog('Downloaded finished', true);
     console.log('\n=========================================');
