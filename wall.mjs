@@ -17,8 +17,8 @@ var keyword = process.argv[2] ? process.argv[2] : false,
 
  // create directory
 if (!!!keyword) {
-    console.log('the keyword');
-    console.log('please try \'$npm start {{keyword}} {{directory}}\' again!');
+    console.log('the keyword can\'t be empty');
+    console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
 } else if (true) {
     console.log('here');
 } else {
