@@ -9,15 +9,15 @@ import {
 var keyword = process.argv[2] ? process.argv[2] : false,
     directory = process.argv[3] ? process.argv[3] : String(keyword),
     startPage = 1,
-    totalPagesNumber = 0,
-    totalImagesNumber = 0,
     imagesInformations = [],
     countloaded = 0,
     log = '';
 
 // start
-async function getTotalPageNumber() {
-    totalImagesNumber = await axios({
+init();
+
+async function getTotalImageNumber() {
+    var totalImagesNumber = await axios({
         method: 'get',
         url: 'https://wall.alphacoders.com/search.php',
         data: {
@@ -33,17 +33,19 @@ async function getTotalPageNumber() {
     }).catch(function(error) {
         console.error(error);
     });
-
-    totalPagesNumber = Math.ceil(totalImagesNumber / 30);
-
-    console.log(totalImagesNumber, totalPagesNumber);
+    return totalImagesNumber;
 }
-// create directory
-if (!keyword) {
-    console.log('the keyword can\'t be empty');
-    console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
-} else {
-    getTotalPageNumber();
+
+async function init() {
+    if (!keyword) {
+        console.log('the keyword can\'t be empty');
+        console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
+        return;
+    }
+
+    var totalImageNumber = await getTotalImageNumber(),
+        totalPagesNumber = Math.ceil(totalImageNumber / 30);
+    console.log('end');
 }
 
 
