@@ -24,6 +24,19 @@ var contents = fs.readFileSync('./image_src.json'),
     json = JSON.parse(contents);
 startDownLoad(json);
 
+async function init() {
+    if (!keyword) {
+        console.log('the keyword can\'t be empty');
+        console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
+        return;
+    }
+
+    var totalImageNumber = await getTotalImageNumber(),
+        totalPagesNumber = Math.ceil(totalImageNumber / 30);
+
+    getAllImagesId(totalPagesNumber);
+}
+
 async function getTotalImageNumber() {
     var totalImagesNumber = await axios({
         method: 'get',
@@ -42,19 +55,6 @@ async function getTotalImageNumber() {
         console.error(error);
     });
     return totalImagesNumber;
-}
-
-async function init() {
-    if (!keyword) {
-        console.log('the keyword can\'t be empty');
-        console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
-        return;
-    }
-
-    var totalImageNumber = await getTotalImageNumber(),
-        totalPagesNumber = Math.ceil(totalImageNumber / 30);
-
-    getAllImagesId(totalPagesNumber);
 }
 
 async function getAllImagesId(page_number) {
