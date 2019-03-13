@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node wall.js"
+    "start": "node --experimental-modules wall.mjs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
     "cheerio": "^1.0.0-rc.1",
+    "lodash": "^4.17.11",
     "request": "^2.81.0"
   }
 }
