@@ -107,7 +107,7 @@ async function getAllImageUrl(allImagesId) {
     allImagesId.forEach(function(image_id) {
         taskArray.push(_createReturnFunction(image_id));
     });
-    task_search = new TaskSystem(taskArray.splice(0, 10), 5);
+    task_search = new TaskSystem(taskArray, 32);
 
     var response = await task_search.doPromise(),
         allImagesSrc = _.chain(response)
