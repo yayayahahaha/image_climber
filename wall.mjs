@@ -34,7 +34,9 @@ async function getTotalPageNumber() {
         console.error(error);
     });
 
-    console.log(totalImagesNumber);
+    totalPagesNumber = Math.ceil(totalImagesNumber / 30);
+
+    console.log(totalImagesNumber, totalPagesNumber);
 }
 // create directory
 if (!keyword) {
