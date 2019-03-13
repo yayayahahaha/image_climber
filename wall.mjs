@@ -63,10 +63,14 @@ async function getAllImagesId(page_number) {
     var response = await task_search.doPromise();
 
     var allImagesId = _.chain(response)
+        .map(function(item) {
+            return item.data;
+        })
         .flattenDepth(1)
         .value();
-    fs.writeFileSync('result.json', JSON.stringify(allImagesId, null, 2));
+
     console.log(allImagesId);
+    fs.writeFileSync('result.json', JSON.stringify(allImagesId, null, 2));
 
     function _createReturnFunction(page) {
         var url = baseUrl + '/search.php?search=' + keyword + '&page=' + page
