@@ -15,33 +15,33 @@ var keyword = process.argv[2] ? process.argv[2] : false,
     countloaded = 0,
     log = '';
 
- // create directory
-if (!!!keyword) {
+// start
+async function getTotalPageNumber() {
+    totalImagesNumber = await axios({
+        method: 'get',
+        url: 'https://wall.alphacoders.com/search.php',
+        data: {
+            search: keyword,
+            page: 1
+        }
+    }).then(function(data) {
+        var $ = cheerio.load(data.data),
+            title = $('h1').text(),
+            totalImagesNumber = title.trim() === '' ? 0 : title.trim().split(' ')[0];
+
+        return parseInt(totalImagesNumber, 10);
+    }).catch(function(error) {
+        console.error(error);
+    });
+
+    console.log(totalImagesNumber);
+}
+// create directory
+if (!keyword) {
     console.log('the keyword can\'t be empty');
     console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
-} else if (true) {
-    console.log('here');
 } else {
-     // start
-
-     // get total page number
-    var r = request.get(
-        'https://wall.alphacoders.com/search.php?search=' + encodeURI(keyword) + '&page=' + 9999999999,
-        function(err, res, body) {
-            totalPagesNumber = res.request.uri.href;
-            totalPagesNumber = totalPagesNumber.split('&page=')[1];
-            totalPagesNumber = parseInt(totalPagesNumber);
-            if (totalPagesNumber === 9999999999) {
-                console.log('Sorry, we have no results for your search! please try another keyword');
-                return;
-            }
-            insertLog('key words: ' + keyword);
-            insertLog('directory: ' + directory);
-
-            insertLog('total page number: ' + totalPagesNumber);
-
-            getPageNumber(startPage);
-        });
+    getTotalPageNumber();
 }
 
 
@@ -60,7 +60,7 @@ function getPageNumber(nowPage) {
             if (nowPage === totalPagesNumber) {
                 imagesInformations = combineRouteAndID(imagesInformations);
 
-                  // check if directory alreayd exist or not
+                // check if directory alreayd exist or not
                 if (!fs.existsSync(directory)) {
                     fs.mkdirSync(keyword);
                 }
@@ -116,7 +116,7 @@ function download(url, dir, filename, total) {
         countloaded++;
         console.log(countloaded + ' / ' + total + ' || ' + Math.round(countloaded * 1000 / total) / 10 + '%');
 
-         // check all files downloaded or not
+        // check all files downloaded or not
         if (countloaded === total) {
             endingPoint();
         }
