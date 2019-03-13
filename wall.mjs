@@ -14,15 +14,8 @@ var keyword = process.argv[2] ? process.argv[2] : false,
     countloaded = 0,
     log = '';
 
-keyword = 'bakemonogatari'; // testing data
-directory = keyword;
 // start
-// init();
-
-// testing init
-var contents = fs.readFileSync('./image_src.json'),
-    json = JSON.parse(contents);
-startDownLoad(json);
+init();
 
 async function init() {
     if (!keyword) {
@@ -33,6 +26,8 @@ async function init() {
 
     var totalImageNumber = await getTotalImageNumber(),
         totalPagesNumber = Math.ceil(totalImageNumber / 30);
+    console.log('Total Image Amount: ' + totalImageNumber);
+    console.log('Total Page Amount: ' + totalPagesNumber);
 
     getAllImagesId(totalPagesNumber);
 }
@@ -147,7 +142,7 @@ async function startDownLoad(allImagesSrc) {
     task_search = new TaskSystem(taskArray.splice(0, 10), 5);
     var response = await task_search.doPromise();
 
-    fs.writeFileSync('final-object.json', JSON.stringify(taskArray, null, 2));
+    console.log('Download Finished!');
 
     function _createReturnFunctoin(src, folder) {
         var splitResult = src.split('/'),
