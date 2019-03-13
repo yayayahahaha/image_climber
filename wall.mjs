@@ -15,6 +15,7 @@ var keyword = process.argv[2] ? process.argv[2] : false,
     log = '';
 
 keyword = 'bakemonogatari'; // testing data
+directory = keyword;
 // start
 // init();
 
@@ -148,10 +149,11 @@ async function startDownLoad(allImagesSrc) {
 
     fs.writeFileSync('final-object.json', JSON.stringify(taskArray, null, 2));
 
-    function _createReturnFunctoin(src) {
+    function _createReturnFunctoin(src, folder) {
         var splitResult = src.split('/'),
+            folder = directory,
             url = src,
-            filePath = splitResult[splitResult.length - 1];
+            filePath = folder + '/' + splitResult[splitResult.length - 1];
         return function() {
             return download(url, filePath);
         };
