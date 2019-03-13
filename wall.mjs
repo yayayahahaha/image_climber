@@ -62,6 +62,8 @@ async function getAllImagesId(page_number) {
         taskArray.push(_createReturnFunction(i));
     }
     task_search = new TaskSystem(taskArray, 32);
+
+    console.log('');
     var response = await task_search.doPromise();
 
     var allImagesId = _.chain(response)
@@ -105,6 +107,7 @@ async function getAllImageUrl(allImagesId) {
     });
     task_search = new TaskSystem(taskArray, 32);
 
+    console.log('');
     var response = await task_search.doPromise(),
         allImagesSrc = _.chain(response)
         .map(function(item) {
@@ -134,6 +137,10 @@ async function getAllImageUrl(allImagesId) {
 }
 
 async function startDownLoad(allImagesSrc) {
+    console.log('--------------------------');
+    console.log('Start DownLoad!');
+    console.log('--------------------------');
+
     var taskArray = [],
         task_search = null;
 
@@ -142,6 +149,8 @@ async function startDownLoad(allImagesSrc) {
     });
 
     task_search = new TaskSystem(taskArray, 32);
+
+    console.log('');
     var response = await task_search.doPromise();
 
     console.log('Download Finished!');
