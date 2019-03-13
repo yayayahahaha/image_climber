@@ -100,8 +100,32 @@ async function getAllImagesId(page_number) {
 }
 
 async function getAllImageUrl(allImagesId) {
-    allImagesId = allImagesId.map(function(image_id) {
-        return baseUrl + '/big.php?i=' + image_id;
+
+    var taskArray = [],
+        task_search = null;
+
+    allImagesId.forEach(function(image_id) {
+        taskArray.push(_createReturnFunction(image_id));
     });
-    console.log(allImagesId[0]);
+    task_search = new TaskSystem(taskArray, 5);
+    var response = await task_search.doPromise();
+    console.log(response);
+    fs.writeFileSync('image_src.json', JSON.stringify(response, null, 2));
+
+    function _createReturnFunction(image_id) {
+        var url = baseUrl + '/big.php?i=' + image_id;
+        return function() {
+            return axios({
+                method: 'get',
+                url: url
+            }).then(function(res) {
+                var data = res.data,
+                    $ = cheerio.load(data),
+                    src = $('div.center.img-container-desktop a').attr('href');
+                return src;
+            }).catch(function(error) {
+                console.error(error);
+            });
+        };
+    }
 }
