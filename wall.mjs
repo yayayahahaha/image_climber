@@ -13,6 +13,7 @@ var keyword = process.argv[2] ? process.argv[2] : false,
     countloaded = 0,
     log = '';
 
+keyword = 'bakemonogatari'; // testing data
 // start
 init();
 
@@ -45,15 +46,23 @@ async function init() {
 
     var totalImageNumber = await getTotalImageNumber(),
         totalPagesNumber = Math.ceil(totalImageNumber / 30);
+
+    getAllImagesId(totalPagesNumber);
 }
 
-function getAllImagesId(page_number) {
+async function getAllImagesId(page_number) {
     var taskArray = [],
         task_search = null;
         // task_search = new TaskSystem(taskArray, 32);
-    for (var i = 1; i <= page_number; i++) {
+
+    // for (var i = 1; i <= page_number; i++) {
+    for (var i = 1; i <= 1; i++) {
         taskArray.push(_createReturnFunction(i));
     }
+    task_search = new TaskSystem(taskArray, 32);
+    var response = await task_search.doPromise();
+    console.log(response);
+    fs.writeFileSync('result.json', JSON.stringify(response));
 
     function _createReturnFunction(page) {
         var url = 'https://wall.alphacoders.com/search.php?search=' + keyword + '&page=' + page
@@ -61,9 +70,15 @@ function getAllImagesId(page_number) {
             return axios({
                 method: 'get',
                 url: url,
-            }).then(function(res) {
-                var $ = cheerio.load(data.data);
-                return ;
+            }).then(function(data) {
+                var $ = cheerio.load(data.data),
+                    list = $('.thumb-container-big .boxgrid a'),
+                    returnArray = [];
+                for (var i = 0; i < list.length; i++) {
+                    returnArray.push($(list[i]).attr('href').split('big.php?i=')[1]);
+                }
+
+                return returnArray;
             }).catch(function(error) {
                 console.error(error);
             });
