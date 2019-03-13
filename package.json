@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node wall.js",
-    "dev": "node --experimental-modules wall.mjs"
+    "start": "node --experimental-modules wall.mjs"
   },
   "author": "",
   "license": "ISC",

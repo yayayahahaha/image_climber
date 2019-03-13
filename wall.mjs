@@ -15,6 +15,9 @@ var key_words = process.argv[2] ? process.argv[2] : false,
     countloaded = 0,
     log = '';
 
+console.log(key_words);
+console.log(directory);
+
  // create directory
 if (!!!key_words) {
     console.log('please try \'$npm start {{key_words}} {{directory}}\' again!');
