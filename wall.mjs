@@ -1,7 +1,3 @@
-import {
-    TaskSystem
-} from './flyc-lib/utils/TaskSystem';
-
 import axios from 'axios';
 import fs from 'fs'
 import cheerio from 'cheerio'; //var $ = cheerio.load(res.data);
@@ -10,16 +6,14 @@ import {
     TaskSystem
 } from './flyc-lib/utils/TaskSystem';
 
-var key_words = process.argv[2] ? process.argv[2] : null,
-    directory = process.argv[3] ? process.argv[3] : key_words,
+var key_words = process.argv[2] ? process.argv[2] : false,
+    directory = process.argv[3] ? process.argv[3] : String(key_words),
     startPage = 1,
     totalPagesNumber = 0,
     totalImagesNumber = 0,
     imagesInformations = [],
     countloaded = 0,
     log = '';
-
-console.log(JSON.stringify(process.argv));
 
  // create directory
 if (!!!key_words) {
