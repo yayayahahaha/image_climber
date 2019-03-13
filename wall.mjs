@@ -19,8 +19,10 @@ init();
 
 async function init() {
     if (!keyword) {
+        console.log('');
         console.log('the keyword can\'t be empty');
         console.log('please try \'$ npm start {{keyword}} [folder]\' again!');
+        console.log('');
         return;
     }
 
@@ -139,7 +141,7 @@ async function startDownLoad(allImagesSrc) {
         taskArray.push(_createReturnFunctoin(src));
     });
 
-    task_search = new TaskSystem(taskArray.splice(0, 10), 5);
+    task_search = new TaskSystem(taskArray, 32);
     var response = await task_search.doPromise();
 
     console.log('Download Finished!');
