@@ -10,6 +10,7 @@ $ npm install
 
 # dream start
 $ npm start {key_words} [directory]
+```
 
 Example:
 if I want download image has keywords "pokemon" in "my-favorate-animate" folder:
@@ -20,3 +21,4 @@ git submodule update
 npm install
 
 npm start "pokemon" "my-favorate-animate"
+```
