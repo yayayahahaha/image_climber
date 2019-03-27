@@ -2,9 +2,8 @@ import axios from 'axios';
 import fs from 'fs'
 import cheerio from 'cheerio'; //var $ = cheerio.load(res.data);
 import _ from 'lodash';
-import {
-    TaskSystem
-} from './flyc-lib/utils/TaskSystem';
+import flyc from 'npm-flyc';
+var { TaskSystem } = flyc;
 
 var keyword = process.argv[2] ? process.argv[2] : false,
     directory = process.argv[3] ? process.argv[3] : String(keyword),
