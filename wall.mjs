@@ -8,11 +8,7 @@ import {
 
 var keyword = process.argv[2] ? process.argv[2] : false,
     directory = process.argv[3] ? process.argv[3] : String(keyword),
-    baseUrl = 'https://wall.alphacoders.com',
-    startPage = 1,
-    imagesInformations = [],
-    countloaded = 0,
-    log = '';
+    baseUrl = 'https://wall.alphacoders.com';
 
 // start
 init();
